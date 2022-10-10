@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'petstagram.common',
     'petstagram.pets',
     'petstagram.photos',
+    'petstagram.core',
 ]
 
 MIDDLEWARE = [
