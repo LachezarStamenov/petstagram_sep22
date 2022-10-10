@@ -61,7 +61,7 @@
                             <div class="left">
                                 <!-- Start Like Button -->
                                 <span class="heart">
-									<a href="#">
+									<a href="{% url 'like photo' photo_id=photo.pk %}">
                                         {% if photo.is_liked_by_user %}
                                             <!-- if user has liked the photo -->
                                             <svg style="color: red"
@@ -129,32 +129,27 @@
                         <!-- End Like and Share Buttons -->
 
                         <!-- Number of Likes per Photo -->
-                        <p class="likes">203 likes</p>
+                        <p class="likes">{{ photo.likes_count }} likes</p>
 
-
-                        <!-- Start Tagged Pets -->
-                        <!-- Link to First Tagged Pet Details Page-->
-                        <a href="{% url 'details pet' username='doncho' pet_name='sasho' %}">
-                            <p class="message">
-                                <b>Sasho</b>
-                            </p>
-                        </a>
-
-                        <!-- Link to Second Tagged Pet Details Page-->
-                        <a href="{% url 'details pet' username='doncho' pet_name='sasho' %}">
-                            <p class="message">
-                                <b>Some other fish</b>
-                            </p>
-                        </a>
+                        {% for  pet in photo.tagged_pets.all %}
+                            <!-- Start Tagged Pets -->
+                            <!-- Link to First Tagged Pet Details Page-->
+                            {# TODO: change username to actual user when auth is available#}
+                            <a href="{% url 'details pet' username='doncho' pet_slug=pet.slug %}">
+                                <p class="message">
+                                    <b>{{ pet.name }}</b>
+                                </p>
+                            </a>
+                        {% endfor %}
                         <!-- End Tagged Pets -->
 
                         <!-- Link to Photo Details Page -->
-                        <a href="#">
+                        <a href="{% url 'detail photo' pk=photo.pk %}">
                             <h4 class="details">See details</h4>
                         </a>
 
                         <!-- Date of Publication -->
-                        <h5 class="postTime">19/09/2022</h5>
+                        <h5 class="postTime">{{ photo.publikation_date }}2</h5>
 
                         <!-- Start Add Comments Section -->
                         <div class="addComments">
