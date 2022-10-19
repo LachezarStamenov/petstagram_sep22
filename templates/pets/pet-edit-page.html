@@ -5,7 +5,7 @@
         <h2>Edit Pet</h2>
         <!-- Start Edit Pet From -->
         <form action="" method="post">
-            {{ form }}
+            {{ form.as_p }}
             {% csrf_token %}
             <!-- Edit Pet Button -->
             <button class="edit-btn" type="submit">Edit</button>
