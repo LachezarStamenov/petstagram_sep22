@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 from petstagram.core.photo_utils import apply_likes_count, apply_user_liked_photo
-from petstagram.pets.forms import PetForm
+from petstagram.pets.forms import PetForm, PetDeleteForm
 from petstagram.pets.models import Pet
 from petstagram.pets.utils import get_pet_by_name_and_username
 
@@ -16,7 +16,13 @@ def add_pet(request):
 
 
 def delete_pet(request, username, pet_slug):
-    return render(request, 'pets/pet-delete-page.html')
+    pet = get_pet_by_name_and_username(pet_slug, username)
+    if request.method == "POST":
+        pet.delete()
+        return redirect('details user', pk=1)
+    form = PetDeleteForm(initial=pet.__dict__)
+    context = {'form': form}
+    return render(request, 'pets/pet-delete-page.html', context)
 
 
 def details_pet(request, username, pet_slug):
@@ -33,7 +39,7 @@ def details_pet(request, username, pet_slug):
 
 
 def edit_pet(request, username, pet_slug):
-    pet = Pet.objects.get(slug=pet_slug)
+    pet = get_pet_by_name_and_username(pet_slug, username)
     if request.method == "GET":
         form = PetForm(instance=pet, initial=pet.__dict__)
     else:
