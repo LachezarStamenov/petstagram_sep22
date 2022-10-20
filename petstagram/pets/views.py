@@ -7,12 +7,31 @@ from petstagram.pets.utils import get_pet_by_name_and_username
 
 
 def add_pet(request):
-    form = PetForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('details user', pk=1)
+    if request.GET:
+        form = PetForm()
+    else:
+        form = PetForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('details user', pk=1)  # TODO: fix this later
     context = {'form': form}
     return render(request, 'pets/pet-add-page.html', context)
+
+
+def edit_pet(request, username, pet_slug):
+    pet = get_pet_by_name_and_username(pet_slug, username)
+    if request.method == "GET":
+        form = PetForm(instance=pet)
+    else:
+        form = PetForm(request.POST, instance=pet)
+        if form.is_valid():
+            form.save()
+            return redirect('details pet', username, pet_slug)
+    context = {'form': form,
+               'pet_slug': pet_slug,
+               'username': username,
+               }
+    return render(request, 'pets/pet-edit-page.html', context)
 
 
 def delete_pet(request, username, pet_slug):
@@ -20,8 +39,11 @@ def delete_pet(request, username, pet_slug):
     if request.method == "POST":
         pet.delete()
         return redirect('details user', pk=1)
-    form = PetDeleteForm(initial=pet.__dict__)
-    context = {'form': form}
+    form = PetDeleteForm()
+    context = {'form': form,
+               'pet_slug': pet_slug,
+               'username': username,
+               }
     return render(request, 'pets/pet-delete-page.html', context)
 
 
@@ -38,15 +60,4 @@ def details_pet(request, username, pet_slug):
     return render(request, 'pets/pet-details-page.html', context)
 
 
-def edit_pet(request, username, pet_slug):
-    pet = get_pet_by_name_and_username(pet_slug, username)
-    if request.method == "GET":
-        form = PetForm(instance=pet, initial=pet.__dict__)
-    else:
-        form = PetForm(request.POST, instance=pet)
-        if form.is_valid():
-            form.save()
-            return redirect('details pet', username, pet_slug)
-    context = {'form': form}
-    return render(request, 'pets/pet-edit-page.html', context)
 

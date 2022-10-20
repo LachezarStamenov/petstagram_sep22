@@ -41,3 +41,15 @@ def share_photo(request, photo_id):
     pyperclip.copy(photo_details_url)
     return redirect(get_photo_url(request, photo_id))
 
+def comment_photo(request, photo_id):
+    photo = Photo.objects.filter(pk=photo_id) \
+        .get()
+
+    form = PhotoCommentForm(request.POST)
+
+    if form.is_valid():
+        comment = form.save(commit=False)  # Does not persist to DB
+        comment.photo = photo
+        comment.save()
+
+    return redirect('index')

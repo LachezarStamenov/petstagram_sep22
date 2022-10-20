@@ -6,7 +6,7 @@
         <h2>Add pet</h2>
 
         <!-- Start Add Pet Form -->
-        <form action="#" enctype="multipart/form-data" method="post">
+        <form action="{% url 'add pet' %}" enctype="multipart/form-data" method="post">
             {{ form.as_p }}
             {% csrf_token %}
             <button class="add-btn" type="submit">Add Pet</button>

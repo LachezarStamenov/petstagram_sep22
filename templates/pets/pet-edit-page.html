@@ -4,7 +4,7 @@
     <div class="edit-delete edit-photo">
         <h2>Edit Pet</h2>
         <!-- Start Edit Pet From -->
-        <form action="" method="post">
+        <form action="{% url 'edit pet' username=username pet_slug=pet_slug %}" method="post">
             {{ form.as_p }}
             {% csrf_token %}
             <!-- Edit Pet Button -->
