@@ -1,26 +1,24 @@
 from django import forms
 
-from petstagram.common.models import PhotoLike
+from petstagram.common.models import PhotoLike, Comment
 from petstagram.core.form_mixin import DisabledFormMixin
 from petstagram.photos.models import Photo
 
-
-class PhotoCreateForm(forms.ModelForm):
-    class Meta:
-        model = Photo
-        fields = '__all__'
-
-
-class PhotoEditForm(forms.ModelForm):
-    class Meta:
-        model = Photo
-        fields = ['photo']
 
 class PhotoBaseForm(forms.ModelForm):
     class Meta:
         model = Photo
         exclude = ('publication_date',)
 
+
+class PhotoCreateForm(PhotoBaseForm):
+    pass
+
+
+class PhotoEditForm(PhotoBaseForm):
+    class Meta:
+        model = Photo
+        exclude = ('publication_date', 'photo')
 
 class PhotoDeleteForm(DisabledFormMixin, PhotoBaseForm):
     disabled_fields = '__all__'
@@ -36,7 +34,7 @@ class PhotoDeleteForm(DisabledFormMixin, PhotoBaseForm):
                 .first().tagged_pets.clear()
             PhotoLike.objects.filter(photo_id=self.instance.id) \
                 .delete()  # one-to-many
-            PhotoComment.objects.filter(photo_id=self.instance.id) \
+            Comment.objects.filter(photo_id=self.instance.id) \
                 .delete()  # one-to-many
             self.instance.delete()
 

@@ -6,8 +6,8 @@ urlpatterns = [
     path('add/', add_photo, name='add photo'),
     path('<int:pk>/', include([
         path('', details_photo, name='detail photo'),
-        path('edit/', edit_photo, name='edit_photo'),
-        path('delete/<int:pk>/', delete_photo, name='delete photo')
+        path('edit/', edit_photo, name='edit photo'),
+        path('delete/', delete_photo, name='delete photo')
     ])),
 
 ]

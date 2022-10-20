@@ -3,23 +3,35 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from pyperclip import copy
 
+from petstagram.common.forms import PhotoCommentForm, SearchPhotosForm
 from petstagram.common.models import PhotoLike
 from petstagram.common.utils import get_user_liked_photo, get_photo_url
 from petstagram.core.photo_utils import apply_likes_count, apply_user_liked_photo
 from petstagram.photos.models import Photo
 
 
-
-
-
 def index(request):
-    photos = [apply_likes_count(photo) for photo in Photo.objects.all()]
+    search_form = SearchPhotosForm(request.GET)
+    search_pattern = None
+    if search_form.is_valid():
+        search_pattern = search_form.cleaned_data['pet_name']
+
+    photos = Photo.objects.all()
+
+    if search_pattern:
+        photos = photos.filter(tagged_pets__name__icontains=search_pattern)
+
+    photos = [apply_likes_count(photo) for photo in photos]
     photos = [apply_user_liked_photo(photo) for photo in photos]
+    print(photos)
     context = {
         'photos': photos,
+        'comment_form': PhotoCommentForm(),
+        'search_form': search_form,
     }
 
     return render(request, 'common/home-page.html', context)
+
 
 
 

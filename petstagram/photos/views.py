@@ -29,6 +29,7 @@ def details_photo(request, pk):
     }
     return render(request, 'photos/photo-details-page.html', context)
 
+
 def get_post_photo_form(request, form, success_url, template_path, pk=None):
     if request.method == 'POST':
         if form.is_valid():
@@ -41,7 +42,6 @@ def get_post_photo_form(request, form, success_url, template_path, pk=None):
     }
 
     return render(request, template_path, context)
-
 
 
 def edit_photo(request, pk):
@@ -59,10 +59,8 @@ def edit_photo(request, pk):
 def delete_photo(request, pk):
     photo = Photo.objects.filter(pk=pk) \
         .get()
-    return get_post_photo_form(
-        request,
-        PhotoDeleteForm(request.POST or None, instance=photo),
-        success_url=reverse('index'),
-        template_path='photos/photo-delete-page.html',
-        pk=pk,
+    return get_post_photo_form(request, PhotoDeleteForm(request.POST or None, instance=photo),
+                               success_url=reverse('index'),
+                               template_path='photos/photo-delete-page.html',
+                               pk=pk,
     )
